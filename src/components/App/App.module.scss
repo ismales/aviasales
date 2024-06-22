@@ -1,0 +1,22 @@
+.app {
+  max-width: 770px;
+  margin-inline: auto;
+  display: grid;
+  grid-template-rows: 150px 1fr;
+  grid-template-columns: 300px 1fr;
+  grid-template-areas:
+    'header header'
+    'aside main';
+}
+
+.header {
+  grid-area: header;
+  margin: auto;
+}
+
+.main {
+  grid-area: main;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
