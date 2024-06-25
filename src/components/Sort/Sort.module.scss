@@ -31,7 +31,8 @@
       border-right: none;
     }
 
-    &:hover {
+    &:hover,
+    &:active {
       color: white;
       background-color: #2196f3;
     }

@@ -1,7 +1,5 @@
-import React from 'react';
-
-import logo from '../../img/Logo.svg';
-import Filters from '../Filter/Filters';
+import logo from '../../img/aviasales-logo.svg';
+import Filters from '../Filters/Filters';
 import Sort from '../Sort/Sort';
 import TicketsList from '../TicketsList/TicketsList';
 

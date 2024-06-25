@@ -1,4 +1,3 @@
-import React from 'react';
 import { format, add } from 'date-fns';
 
 import classes from './Ticket.module.scss';
@@ -28,26 +27,17 @@ export default function TicketsList() {
     },
   ];
 
-  const sending = (segment) => {
-    return format(new Date(segment.date), 'HH:mm');
-  };
+  const sending = (segment) => format(new Date(segment.date), 'HH:mm');
 
-  const arrival = (segment) => {
-    return format(
+  const arrival = (segment) =>
+    format(
       add(new Date(segment.date), {
         minutes: segment.duration,
       }),
       'kk:mm'
     );
-  };
 
-  const stops = (segment) => {
-    return segment.stops
-      .map((name) => {
-        return name;
-      })
-      .join(', ');
-  };
+  const stops = (segment) => segment.stops.map((name) => name).join(', ');
 
   return (
     <li id={tickets.id} className={classes.ticket}>

@@ -1,4 +1,4 @@
-class TicketsService {
+export default class TicketsService {
   base = 'https://aviasales-test-api.kata.academy';
 
   tickets = [];
@@ -13,16 +13,12 @@ class TicketsService {
     let shouldContinue = true;
     while (shouldContinue) {
       try {
+        /* eslint-disable no-await-in-loop */
         const ticketsRes = await this.getTickets();
         this.saveTickets(ticketsRes.tickets);
         shouldContinue = !ticketsRes.stop;
-        // console.log(this.tickets.length, ticketsRes.stop);
-      } catch (error) {
-        console.error('Error fetching tickets, retrying:', error);
-      }
+      } catch (error) {}
     }
-
-    console.log('All tickets fetched:', this.tickets.length);
   };
 
   getSearchID = async () => {
