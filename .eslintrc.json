@@ -19,15 +19,15 @@
       "files": ["src/**/*.js"],
       "rules": {
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-        "no-plusplus": 0,
-        "react/react-in-jsx-scope": 0
+        "react/forbid-prop-types": "off",
+        "no-plusplus": "off",
+        "react/prop-types": "off"
       }
     },
     {
       "files": ["src/**/*Slice.js"],
       "rules": {
-        "no-param-reassign": ["error", { "props": false }],
-        "no-return-assign": 0
+        "no-param-reassign": ["error", { "props": false }]
       }
     }
   ],

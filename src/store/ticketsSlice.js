@@ -1,4 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+
+export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async () => {
+  const base = 'https://aviasales-test-api.kata.academy';
+
+  const fetchIdRes = await fetch(`${base}/search`);
+  const searchIdData = await fetchIdRes.json();
+  const { searchId } = searchIdData;
+
+  const ticketsRes = await fetch(`${base}/tickets?searchId=${searchId}`);
+  if (!ticketsRes.ok) {
+    throw new Error(`Failed to fetch tickets: ${ticketsRes.status} ${ticketsRes.statusText}`);
+  }
+  const ticketsData = await ticketsRes.json();
+
+  return ticketsData.tickets;
+});
 
 const filters = [
   { id: 'all', name: 'Все', isChecked: false },
@@ -11,7 +27,6 @@ const filters = [
 const ticketsSlice = createSlice({
   name: 'tickets',
   initialState: {
-    searchId: null,
     tickets: [],
     sortValue: null,
     filters,
@@ -49,29 +64,26 @@ const ticketsSlice = createSlice({
       state.sortValue = action.payload.sort;
     },
   },
+
+  extraReducers: (builder) => {
+    builder.addCase(fetchTickets.fulfilled, (state, action) => {
+      state.tickets = action.payload;
+    });
+  },
 });
 
 export const { sortedTickets, setSortValue, setFilter } = ticketsSlice.actions;
 
 export default ticketsSlice.reducer;
 
-// {
-//   carrier: 'DP',
-//   price: 19950,
-//   segments: [
-//     {
-//       date: '2024-07-07T19:23:37.881Z',
-//       destination: 'HKT',
-//       duration: 1214,
-//       origin: 'MOW',
-//       stops: ['DXB', 'JNB'],
-//     },
-//     {
-//       date: '2024-10-03T10:37:28.129Z',
-//       destination: 'MOW',
-//       duration: 1425,
-//       origin: 'HKT',
-//       stops: ['DOH', 'HKG', 'JNB'],
-//     },
-//   ],
+// fetchTickets = async () => {
+//   let shouldContinue = true;
+//   while (shouldContinue) {
+//     try {
+//       /* eslint-disable no-await-in-loop */
+//       const ticketsRes = await this.getTickets();
+//       this.saveTickets(ticketsRes.tickets);
+//       shouldContinue = !ticketsRes.stop;
+//     } catch (error) {}
+//   }
 // };
