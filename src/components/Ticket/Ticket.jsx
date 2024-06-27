@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import { format, add } from 'date-fns';
 import classes from './Ticket.module.scss';
 

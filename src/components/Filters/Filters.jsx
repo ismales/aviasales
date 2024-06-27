@@ -7,10 +7,6 @@ export default function Filters() {
   const dispatch = useDispatch();
   const filters = useSelector((state) => state.tickets.filters);
 
-  const handleCheckboxChange = (id, isChecked) => {
-    dispatch(setFilter({ id, isChecked }));
-  };
-
   return (
     <div className={classes.aside}>
       <h3 className={classes['filters-title']}>КОЛИЧЕСТВО ПЕРЕСАДОК</h3>
@@ -22,7 +18,7 @@ export default function Filters() {
               id={filter.id}
               className={classes['checkbox-custom']}
               checked={filter.isChecked}
-              onChange={(e) => handleCheckboxChange(filter.id, e.target.checked)}
+              onChange={(e) => dispatch(setFilter({ id: filter.id, isChecked: e.target.checked }))}
             />
             <label htmlFor={filter.id}>{filter.name}</label>
           </li>

@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus, no-shadow */
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setFoneLoading, setSortValue } from '../../store/ticketsSlice';
+import { filterTickets, setFoneLoading } from '../../store/ticketsSlice';
 
 import classes from './TicketsList.module.scss';
 
@@ -15,6 +15,7 @@ export default function TicketsList() {
   const isFoneLoading = useSelector((state) => state.tickets.isFoneLoading);
   const filteredTickets = useSelector((state) => state.tickets.filteredTickets);
   const sortValue = useSelector((state) => state.tickets.sortValue);
+  const filters = useSelector((state) => state.tickets.filters);
 
   const [showTicketsLimit, setShowTicketsLimit] = useState(5);
 
@@ -22,8 +23,8 @@ export default function TicketsList() {
     if (!isTicketsLoad) {
       dispatch(setFoneLoading(false));
     }
-    dispatch(setSortValue(sortValue));
-  }, [filteredTickets, sortValue]);
+    dispatch(filterTickets());
+  }, [sortValue, filters, isTicketsLoad]);
 
   const limitTicketsViewCount = (tickets, limit) => tickets.slice(0, limit);
   const limitedTickets = limitTicketsViewCount(filteredTickets, showTicketsLimit);

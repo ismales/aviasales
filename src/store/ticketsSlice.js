@@ -1,4 +1,3 @@
-/* eslint-disable no-undef, no-use-before-define, no-await-in-loop, no-empty  */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, { dispatch }) => {
@@ -48,6 +47,10 @@ const ticketsSlice = createSlice({
       state.tickets.push(...action.payload);
       state.filteredTickets = state.tickets;
     },
+    setSortValue(state, action) {
+      state.sortValue = action.payload.sort;
+    },
+
     setFilter(state, action) {
       const { id, isChecked } = action.payload;
       if (id === 'all') {
@@ -60,7 +63,9 @@ const ticketsSlice = createSlice({
         const allFilter = state.filters.find((f) => f.id === 'all');
         allFilter.isChecked = state.filters.filter((f) => f.id !== 'all').every((f) => f.isChecked);
       }
+    },
 
+    filterTickets(state) {
       const selectedFilters = state.filters
         .filter((filter) => filter.isChecked && filter.id !== 'all')
         .map((filter) => filter.id);
@@ -68,13 +73,11 @@ const ticketsSlice = createSlice({
       state.filteredTickets = state.tickets.filter((ticket) =>
         ticket.segments.some((segment) => selectedFilters.includes(segment.stops.length))
       );
-    },
-    setSortValue(state, action) {
-      state.sortValue = action.payload;
 
       if (state.sortValue === 'Самый дешевый') {
         state.filteredTickets.sort((a, b) => a.price - b.price);
       }
+
       if (state.sortValue === 'Самый быстрый') {
         state.filteredTickets.sort((a, b) => a.segments[0].duration - b.segments[0].duration);
       }
@@ -96,5 +99,5 @@ const ticketsSlice = createSlice({
   serializeCheck: false,
 });
 
-export const { addTickets, setSortValue, setFilter, setFoneLoading } = ticketsSlice.actions;
+export const { addTickets, setSortValue, setFilter, filterTickets, setFoneLoading } = ticketsSlice.actions;
 export default ticketsSlice.reducer;
