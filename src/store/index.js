@@ -6,4 +6,8 @@ export default configureStore({
   reducer: {
     tickets: ticketsReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
 });

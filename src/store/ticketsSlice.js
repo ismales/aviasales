@@ -1,4 +1,4 @@
-/* eslint-disable no-undef, no-use-before-define, no-await-in-loop  */
+/* eslint-disable no-undef, no-use-before-define, no-await-in-loop, no-empty  */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, { dispatch }) => {
@@ -12,43 +12,41 @@ export const fetchTickets = createAsyncThunk('tickets/fetchTickets', async (_, {
   while (shouldContinue) {
     try {
       const ticketsRes = await fetch(`${base}/tickets?searchId=${searchId}`);
-      if (!ticketsRes.ok) {
-        throw new Error(`Failed to fetch tickets: ${ticketsRes.status} ${ticketsRes.statusText}`);
-      }
       const ticketsData = await ticketsRes.json();
       ticketsArr.push(...ticketsData.tickets);
       if (ticketsArr.length === 500) {
         dispatch(addTickets(ticketsData.tickets));
-        dispatch(setIsLoading(false));
+        dispatch(setFoneLoading(true));
       }
       shouldContinue = !ticketsData.stop;
-    } catch (e) {
-      console.log(e);
-    }
+    } catch {}
   }
 
   return ticketsArr;
 });
 
 const filters = [
-  { id: 'all', name: 'Все', isChecked: false },
-  { id: 'noStop', name: 'Без пересадок', isChecked: false },
-  { id: 'oneStop', name: '1 пересадка', isChecked: false },
-  { id: 'twoStops', name: '2 пересадки', isChecked: false },
-  { id: 'threeStops', name: '3 пересадки', isChecked: false },
+  { id: 'all', name: 'Все', isChecked: true },
+  { id: 0, name: 'Без пересадок', isChecked: true },
+  { id: 1, name: '1 пересадка', isChecked: true },
+  { id: 2, name: '2 пересадки', isChecked: true },
+  { id: 3, name: '3 пересадки', isChecked: true },
 ];
 
 const ticketsSlice = createSlice({
   name: 'tickets',
   initialState: {
     tickets: [],
-    sortValue: null,
+    filteredTickets: [],
+    sortValue: 'Самый дешевый',
     filters,
-    isLoading: false,
+    isTicketsLoad: false,
+    isFoneLoading: null,
   },
   reducers: {
     addTickets(state, action) {
       state.tickets.push(...action.payload);
+      state.filteredTickets = state.tickets;
     },
     setFilter(state, action) {
       const { id, isChecked } = action.payload;
@@ -62,31 +60,41 @@ const ticketsSlice = createSlice({
         const allFilter = state.filters.find((f) => f.id === 'all');
         allFilter.isChecked = state.filters.filter((f) => f.id !== 'all').every((f) => f.isChecked);
       }
-    },
-    sortedTickets(state) {
-      if (state.sortValue === 'Самый дешевый') {
-        state.tickets = state.tickets.sort((a, b) => a.price - b.price);
-      }
-      if (state.sortValue === 'Самый быстрый') {
-        state.tickets = state.tickets.sort((a, b) => a.segments[0].duration - b.segments[0].duration);
-      }
+
+      const selectedFilters = state.filters
+        .filter((filter) => filter.isChecked && filter.id !== 'all')
+        .map((filter) => filter.id);
+
+      state.filteredTickets = state.tickets.filter((ticket) =>
+        ticket.segments.some((segment) => selectedFilters.includes(segment.stops.length))
+      );
     },
     setSortValue(state, action) {
-      state.sortValue = action.payload.sort;
+      state.sortValue = action.payload;
+
+      if (state.sortValue === 'Самый дешевый') {
+        state.filteredTickets.sort((a, b) => a.price - b.price);
+      }
+      if (state.sortValue === 'Самый быстрый') {
+        state.filteredTickets.sort((a, b) => a.segments[0].duration - b.segments[0].duration);
+      }
     },
-    setIsLoading(state, action) {
-      state.isLoading = action.payload.isLoading;
+    setFoneLoading(state, action) {
+      state.isFoneLoading = action.payload.isFoneLoading;
     },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchTickets.pending, (state) => {
-      state.isLoading = true;
+      state.isTicketsLoad = true;
+      state.isFoneLoading = false;
     });
     builder.addCase(fetchTickets.fulfilled, (state, action) => {
       state.tickets = action.payload;
+      state.isTicketsLoad = false;
     });
   },
+  serializeCheck: false,
 });
 
-export const { addTickets, sortedTickets, setSortValue, setFilter, setIsLoading } = ticketsSlice.actions;
+export const { addTickets, setSortValue, setFilter, setFoneLoading } = ticketsSlice.actions;
 export default ticketsSlice.reducer;

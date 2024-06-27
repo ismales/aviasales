@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus, no-shadow */
 import { useState, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchTickets } from '../../store/ticketsSlice';
+import { setFoneLoading, setSortValue } from '../../store/ticketsSlice';
 
 import classes from './TicketsList.module.scss';
 
@@ -11,27 +11,25 @@ import Loader from '../Loader/Loader';
 export default function TicketsList() {
   const ticketID = useRef(1);
   const dispatch = useDispatch();
-  const isLoading = useSelector((state) => state.tickets.isLoading);
-  const tickets = useSelector((state) => state.tickets.tickets);
+  const isTicketsLoad = useSelector((state) => state.tickets.isTicketsLoad);
+  const isFoneLoading = useSelector((state) => state.tickets.isFoneLoading);
+  const filteredTickets = useSelector((state) => state.tickets.filteredTickets);
+  const sortValue = useSelector((state) => state.tickets.sortValue);
 
-  const [foneLoading, setFoneLoading] = useState(true);
-  const [ticketLimit, setTicketLimit] = useState(5);
-
-  useEffect(() => {
-    dispatch(fetchTickets()).catch(() => dispatch(fetchTickets()));
-  }, [dispatch]);
+  const [showTicketsLimit, setShowTicketsLimit] = useState(5);
 
   useEffect(() => {
-    if (tickets.length > 9000) {
-      setFoneLoading(false);
+    if (!isTicketsLoad) {
+      dispatch(setFoneLoading(false));
     }
-  }, [tickets]);
+    dispatch(setSortValue(sortValue));
+  }, [filteredTickets, sortValue]);
 
   const limitTicketsViewCount = (tickets, limit) => tickets.slice(0, limit);
-  const limitedTickets = limitTicketsViewCount(tickets, ticketLimit);
+  const limitedTickets = limitTicketsViewCount(filteredTickets, showTicketsLimit);
 
   const handleShowMore = () => {
-    setTicketLimit(ticketLimit + 5);
+    setShowTicketsLimit(showTicketsLimit + 5);
   };
 
   const content = (
@@ -41,7 +39,7 @@ export default function TicketsList() {
           <Ticket key={ticketID.current++} ticket={ticket} />
         ))}
       </ul>
-      {tickets.length > ticketLimit && (
+      {filteredTickets.length > showTicketsLimit && (
         <button type="button" className={classes['show-more-btn']} onClick={handleShowMore}>
           Показать ещё
         </button>
@@ -49,15 +47,16 @@ export default function TicketsList() {
     </>
   );
 
-  // const loader1 = foneLoading ? <Loader /> : <div>Загрузка завершена</div>;
+  const noRes = <div className={classes['no-results-message']}>Билетов под заданные фильтры не найдено</div>;
+
   const loader = (
-    <div className={classes['tickets-list__loader']}>{foneLoading ? <Loader /> : 'Загрузка завершена'}</div>
+    <div className={classes['tickets-list__loader']}>{isTicketsLoad ? <Loader /> : 'Билеты загружены'}</div>
   );
 
   return (
-    <div>
+    <div className={classes.container}>
       {loader}
-      <div>{!isLoading && content}</div>
+      {!isFoneLoading && !filteredTickets.length ? noRes : content}
     </div>
   );
 }

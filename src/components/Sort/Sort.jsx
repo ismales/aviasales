@@ -7,7 +7,7 @@ export default function Sort() {
   const dispatch = useDispatch();
   const isActive = useSelector((state) => state.tickets.sortValue);
 
-  const sortNames = ['Самый дешевый', 'Самый быстрый', 'Оптимальный'];
+  const sortNames = ['Самый дешевый', 'Самый быстрый'];
   return (
     <div className={classes.sort}>
       {sortNames.map((sort) => (
