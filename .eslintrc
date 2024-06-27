@@ -1,7 +1,7 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
   },
   "extends": ["airbnb", "plugin:react/jsx-runtime", "prettier"],
   "parser": "@babel/eslint-parser",
@@ -10,8 +10,8 @@
     "ecmaVersion": "latest",
     "sourceType": "module",
     "babelOptions": {
-      "presets": ["@babel/preset-react"]
-    }
+      "presets": ["@babel/preset-react"],
+    },
   },
   "plugins": ["react"],
   "overrides": [
@@ -21,19 +21,20 @@
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
         "react/forbid-prop-types": "off",
         "no-plusplus": "off",
-        "react/prop-types": "off"
-      }
+        "react/prop-types": "off",
+        "no-shadow": "off",
+      },
     },
     {
       "files": ["src/**/*Slice.js"],
       "rules": {
-        "no-param-reassign": ["error", { "props": false }]
-      }
-    }
+        "no-param-reassign": ["error", { "props": false }],
+      },
+    },
   ],
   "settings": {
     "react": {
-      "version": "detect"
-    }
-  }
+      "version": "detect",
+    },
+  },
 }

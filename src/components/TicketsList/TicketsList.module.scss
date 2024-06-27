@@ -1,0 +1,19 @@
+.show-more-btn {
+  width: 100%;
+  height: 40px;
+  border: none;
+  border-radius: 7px;
+  background-color: #2196f3;
+  color: white;
+
+  transition: 0.3s;
+
+  &:hover {
+    font-size: 14px;
+  }
+}
+
+.tickets-list__loader {
+  width: 100%;
+  height: 40px;
+}
