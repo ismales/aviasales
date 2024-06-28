@@ -8,6 +8,13 @@
   grid-template-areas:
     'header header'
     'aside main';
+
+  @media (max-width: 450px) {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+  }
 }
 
 .header {
