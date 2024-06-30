@@ -13,6 +13,7 @@ export default function Ticket({ ticket }) {
     );
 
   const stops = (segment) => segment.stops.map((name) => name).join(', ');
+
   const stopsTitle = (num) => {
     switch (num) {
       case 0:
@@ -25,7 +26,7 @@ export default function Ticket({ ticket }) {
   };
 
   return (
-    <li className={classes.ticket}>
+    <>
       <div className={classes['ticket-header']}>
         <span className={classes.price}>{ticket.price}</span>
         <img src={`https://pics.avs.io/110/36/${ticket.carrier}.png`} alt="flight company logo" />
@@ -72,6 +73,6 @@ export default function Ticket({ ticket }) {
           <span className={classes.desc}>{stops(ticket.segments[1])}</span>
         </div>
       </div>
-    </li>
+    </>
   );
 }

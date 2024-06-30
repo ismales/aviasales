@@ -11,15 +11,20 @@ export default function Sort() {
   return (
     <div className={classes.sort}>
       {sortNames.map((sort) => (
-        <button
-          type="button"
+        <label
           key={sort}
           className={classes['sort-item']}
           style={isActive === sort ? { color: 'white', backgroundColor: '#2196f3' } : null}
-          onClick={() => dispatch(setSortValue({ sort }))}
         >
+          <input
+            type="radio"
+            name="sort-radio"
+            className={classes['sort-item__radio']}
+            value={sort}
+            onChange={() => dispatch(setSortValue({ sort }))}
+          />
           {sort}
-        </button>
+        </label>
       ))}
     </div>
   );

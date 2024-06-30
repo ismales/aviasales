@@ -1,6 +1,6 @@
-/* eslint-disable no-plusplus, no-shadow */
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import uniqid from 'uniqid';
 import { filterTickets, setFoneLoading } from '../../store/ticketsSlice';
 
 import classes from './TicketsList.module.scss';
@@ -9,7 +9,6 @@ import Ticket from '../Ticket/Ticket';
 import Loader from '../Loader/Loader';
 
 export default function TicketsList() {
-  const ticketID = useRef(1);
   const dispatch = useDispatch();
   const isTicketsLoad = useSelector((state) => state.tickets.isTicketsLoad);
   const isFoneLoading = useSelector((state) => state.tickets.isFoneLoading);
@@ -37,7 +36,9 @@ export default function TicketsList() {
     <>
       <ul>
         {limitedTickets.map((ticket) => (
-          <Ticket key={ticketID.current++} ticket={ticket} />
+          <li key={uniqid(`${ticket.carrier}`)} className={classes.ticket}>
+            <Ticket ticket={ticket} />
+          </li>
         ))}
       </ul>
       {filteredTickets.length > showTicketsLimit && (

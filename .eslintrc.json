@@ -22,7 +22,9 @@
         "react/forbid-prop-types": "off",
         "no-plusplus": "off",
         "react/prop-types": "off",
-        "no-shadow": "off"
+        "no-shadow": "off",
+        "jsx-a11y/label-has-associated-control": "off",
+        "no-unused-expressions": "off"
       }
     },
     {
